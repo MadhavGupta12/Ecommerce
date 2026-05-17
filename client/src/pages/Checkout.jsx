@@ -39,7 +39,9 @@ export default function Checkout() {
       shippingAddress,
       paymentMethod: 'PayPal',
       ...totals
-    }).unwrap();
+    }).unwrap().catch((error) => {
+      throw new Error(getErrorMessage(error));
+    });
 
     orderIdRef.current = order._id;
     setOrderId(order._id);
@@ -48,18 +50,27 @@ export default function Checkout() {
   };
 
   const handleApprove = async (_data, actions) => {
-    const details = await actions.order.capture();
-    const appOrderId = orderIdRef.current || orderId || await placeOrder();
-    await payOrder({ id: appOrderId, details }).unwrap();
-    dispatch(clearCart());
-    navigate('/');
+    try {
+      const details = await actions.order.capture();
+      const appOrderId = orderIdRef.current || orderId;
+
+      if (!appOrderId) {
+        throw new Error('Create the order before paying.');
+      }
+
+      await payOrder({ id: appOrderId, details }).unwrap();
+      dispatch(clearCart());
+      navigate('/');
+    } catch (error) {
+      setMessage(getErrorMessage(error));
+    }
   };
 
   const handleCreateOrder = async () => {
     try {
       await placeOrder();
     } catch (error) {
-      setMessage(error.message || 'Unable to create order.');
+      setMessage(getErrorMessage(error));
     }
   };
 
@@ -84,19 +95,27 @@ export default function Checkout() {
       <aside className="panel h-fit space-y-4">
         <h2 className="text-xl font-bold">Pay with PayPal</h2>
         <p className="flex justify-between font-semibold"><span>Total</span><span>${totals.totalPrice.toFixed(2)}</span></p>
-        {!hasShippingAddress && <p className="text-sm text-stone-600">Enter shipping details to enable PayPal checkout.</p>}
+        {!hasShippingAddress && <p className="text-sm text-stone-600">Enter shipping details to create an order.</p>}
+        {hasShippingAddress && !orderId && <p className="text-sm text-stone-600">Create the order first, then PayPal payment will unlock.</p>}
         <PayPalScriptProvider key={paypalClientId} options={paypalOptions}>
           <PayPalButtons
             createOrder={async (_data, actions) => {
-              await placeOrder();
+              if (!orderIdRef.current && !orderId) {
+                throw new Error('Create the order before paying.');
+              }
               return actions.order.create({ purchase_units: [{ amount: { value: totals.totalPrice.toFixed(2) } }] });
             }}
-            disabled={!items.length || !hasShippingAddress}
-            onError={(error) => setMessage(error.message || 'PayPal payment failed.')}
+            disabled={!items.length || !hasShippingAddress || !orderId}
+            onCancel={() => setMessage('Payment was cancelled. Your order is still created and can be paid again.')}
+            onError={(error) => setMessage(getErrorMessage(error))}
             onApprove={handleApprove}
           />
         </PayPalScriptProvider>
       </aside>
     </div>
   );
+}
+
+function getErrorMessage(error) {
+  return error?.data?.message || error?.error || error?.message || 'Something went wrong. Please try again.';
 }
