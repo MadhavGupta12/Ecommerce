@@ -56,7 +56,7 @@ export default function ProductDetails() {
               <img className="h-full max-h-[620px] min-h-[360px] w-full object-cover" src={activeMedia?.src || product.image} alt={product.name} />
             )}
           </div>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-5 gap-3">
             {media.map((item, index) => (
               <button
                 className={`relative aspect-video overflow-hidden rounded-md border bg-white ${selectedMediaIndex === index ? 'border-brass ring-2 ring-brass/30' : 'border-stone-200'}`}
@@ -77,13 +77,13 @@ export default function ProductDetails() {
             ))}
           </div>
         </div>
-        <div className="space-y-5">
+        <div className="space-y-5 rounded-lg border border-stone-200 bg-white p-6 shadow-soft">
           <p className="text-sm font-semibold uppercase tracking-wide text-moss">{product.brand}</p>
           <h1 className="text-4xl font-bold leading-tight sm:text-5xl">{product.name}</h1>
           <p className="text-lg text-stone-700">{product.description}</p>
           <div className="flex flex-wrap gap-2 text-sm">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 font-semibold text-stone-700 shadow-sm"><ImageIcon size={16} /> {media.filter((item) => item.type === 'image').length} images</span>
-            {product.videoUrl && <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 font-semibold text-stone-700 shadow-sm"><PlayCircle size={16} /> Product video</span>}
+            <span className="inline-flex items-center gap-2 rounded-full bg-linen px-3 py-1 font-semibold text-stone-700"><ImageIcon size={16} /> {media.filter((item) => item.type === 'image').length} images</span>
+            {product.videoUrl && <span className="inline-flex items-center gap-2 rounded-full bg-ink px-3 py-1 font-semibold text-white"><PlayCircle size={16} /> Product video</span>}
           </div>
           <div className="grid gap-3 border-y border-stone-200 py-5 sm:grid-cols-3">
             <div>

@@ -1,4 +1,4 @@
-import { PlayCircle, ShoppingBag, Star } from 'lucide-react';
+import { Images, PlayCircle, ShoppingBag, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function ProductCard({ product }) {
@@ -12,11 +12,16 @@ export default function ProductCard({ product }) {
               Featured
             </span>
           )}
-          {product.videoUrl && (
-            <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full bg-ink/85 px-3 py-1 text-xs font-semibold text-white">
-              <PlayCircle size={14} /> Video
+          <div className="absolute bottom-3 right-3 flex gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink shadow-sm">
+              <Images size={14} /> {(product.gallery?.length || 1)}
             </span>
-          )}
+            {product.videoUrl && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-ink/85 px-3 py-1 text-xs font-semibold text-white">
+                <PlayCircle size={14} /> Video
+              </span>
+            )}
+          </div>
         </div>
       </Link>
       <div className="space-y-3 p-4">

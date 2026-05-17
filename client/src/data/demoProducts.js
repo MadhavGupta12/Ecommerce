@@ -160,20 +160,32 @@ const galleryImages = [
   'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'
+  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600210491369-e753d80a41f3?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600607687644-c7171b42498f?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600607688066-890987f18a86?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=80'
 ];
 
 const productVideos = [
   'https://videos.pexels.com/video-files/7534244/7534244-hd_1920_1080_25fps.mp4',
   'https://videos.pexels.com/video-files/7578552/7578552-hd_1920_1080_25fps.mp4',
-  'https://videos.pexels.com/video-files/5998165/5998165-hd_1920_1080_25fps.mp4'
+  'https://videos.pexels.com/video-files/5998165/5998165-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/7586177/7586177-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/7033773/7033773-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/7578543/7578543-hd_1920_1080_25fps.mp4'
 ];
 
 demoProducts.forEach((product, index) => {
   product.gallery = [
     product.image,
     galleryImages[index % galleryImages.length],
-    galleryImages[(index + 2) % galleryImages.length]
+    galleryImages[(index + 2) % galleryImages.length],
+    galleryImages[(index + 5) % galleryImages.length],
+    galleryImages[(index + 8) % galleryImages.length]
   ];
-  product.videoUrl = index % 2 === 0 ? productVideos[index % productVideos.length] : '';
+  product.videoUrl = productVideos[index % productVideos.length];
 });

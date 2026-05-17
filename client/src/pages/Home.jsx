@@ -1,4 +1,4 @@
-import { ArrowRight, BadgeCheck, CreditCard, PlayCircle, Search, ShieldCheck, SlidersHorizontal, Truck } from 'lucide-react';
+import { ArrowRight, BadgeCheck, CreditCard, Images, PlayCircle, Search, ShieldCheck, SlidersHorizontal, Sparkles, Truck } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import { demoCategories, demoProducts } from '../data/demoProducts';
@@ -12,6 +12,7 @@ export default function Home() {
   const categories = apiCategories.length ? apiCategories : demoCategories;
   const products = data?.products?.length ? data.products : filterDemoProducts(filters);
   const featured = products.filter((product) => product.featured).slice(0, 3);
+  const mediaProducts = products.filter((product) => product.videoUrl).slice(0, 4);
 
   const update = (event) => setFilters((current) => ({ ...current, [event.target.name]: event.target.value }));
 
@@ -100,6 +101,49 @@ export default function Home() {
             poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80"
             src="https://videos.pexels.com/video-files/7534244/7534244-hd_1920_1080_25fps.mp4"
           />
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-wide text-moss">Visual catalogue</p>
+            <h2 className="text-3xl font-bold">Rooms in motion</h2>
+          </div>
+          <Sparkles className="text-brass" size={28} />
+        </div>
+        <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="relative min-h-[420px] overflow-hidden rounded-lg bg-black shadow-soft">
+            <video
+              autoPlay
+              className="absolute inset-0 h-full w-full object-cover"
+              loop
+              muted
+              playsInline
+              poster={mediaProducts[0]?.image || featured[0]?.image}
+              src={mediaProducts[0]?.videoUrl || 'https://videos.pexels.com/video-files/7534244/7534244-hd_1920_1080_25fps.mp4'}
+            />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent p-6 text-white">
+              <p className="inline-flex items-center gap-2 text-sm font-semibold"><PlayCircle size={18} /> Featured room video</p>
+              <h3 className="mt-2 text-3xl font-bold">{mediaProducts[0]?.name || 'LuxeHaven collection'}</h3>
+              <p className="mt-2 max-w-lg text-sm text-stone-200">A more premium catalogue experience with motion, galleries, and detail-page media switching.</p>
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            {mediaProducts.slice(1, 4).map((product) => (
+              <a className="group grid grid-cols-[120px_1fr] overflow-hidden rounded-lg border border-stone-200 bg-white shadow-soft transition hover:border-brass" href={`/products/${product._id}`} key={product._id}>
+                <div className="relative h-full min-h-32 overflow-hidden">
+                  <img className="h-full w-full object-cover transition group-hover:scale-105" src={product.image} alt={product.name} />
+                  <span className="absolute inset-0 grid place-items-center bg-ink/20 text-white"><PlayCircle size={28} /></span>
+                </div>
+                <div className="flex flex-col justify-center p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-moss">{product.category?.name}</p>
+                  <h3 className="font-bold">{product.name}</h3>
+                  <p className="mt-2 inline-flex items-center gap-2 text-sm text-stone-600"><Images size={16} /> {product.gallery?.length || 1} images plus video</p>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
