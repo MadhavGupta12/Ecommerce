@@ -5,6 +5,7 @@
   "description": "Intermediate MERN e-commerce platform",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
     "install:all": "npm install && npm install --prefix server && npm install --prefix client",
     "seed": "npm run seed --prefix server",
     "start": "npm start --prefix server"
