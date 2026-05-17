@@ -1,5 +1,5 @@
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { clearCart, selectCartTotals } from '../features/cartSlice';
@@ -7,38 +7,67 @@ import { useCreateOrderMutation, useGetPaypalConfigQuery, usePayOrderMutation } 
 
 export default function Checkout() {
   const [shippingAddress, setShippingAddress] = useState({ address: '', city: '', postalCode: '', country: '' });
+  const [message, setMessage] = useState('');
   const items = useSelector((state) => state.cart.items);
   const totals = useSelector(selectCartTotals);
   const { data: paypal } = useGetPaypalConfigQuery();
   const [createOrder] = useCreateOrderMutation();
   const [payOrder] = usePayOrderMutation();
   const [orderId, setOrderId] = useState('');
+  const orderIdRef = useRef('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const paypalOptions = useMemo(() => ({ clientId: paypal?.clientId || 'sb', currency: 'USD' }), [paypal]);
+  const paypalClientId = paypal?.clientId && paypal.clientId !== 'your_paypal_client_id' ? paypal.clientId : 'sb';
+  const paypalOptions = useMemo(() => ({ clientId: paypalClientId, currency: 'USD' }), [paypalClientId]);
+  const hasShippingAddress = Object.values(shippingAddress).every(Boolean);
 
   const placeOrder = async () => {
+    if (!items.length) {
+      throw new Error('Your cart is empty.');
+    }
+
+    if (!hasShippingAddress) {
+      throw new Error('Complete the shipping address before payment.');
+    }
+
+    if (orderIdRef.current) {
+      return orderIdRef.current;
+    }
+
     const order = await createOrder({
       orderItems: items,
       shippingAddress,
       paymentMethod: 'PayPal',
       ...totals
     }).unwrap();
+
+    orderIdRef.current = order._id;
     setOrderId(order._id);
+    setMessage(`Order ${order._id} created. Complete PayPal payment to mark it paid.`);
     return order._id;
   };
 
   const handleApprove = async (_data, actions) => {
     const details = await actions.order.capture();
-    await payOrder({ id: orderId || await placeOrder(), details }).unwrap();
+    const appOrderId = orderIdRef.current || orderId || await placeOrder();
+    await payOrder({ id: appOrderId, details }).unwrap();
     dispatch(clearCart());
     navigate('/');
+  };
+
+  const handleCreateOrder = async () => {
+    try {
+      await placeOrder();
+    } catch (error) {
+      setMessage(error.message || 'Unable to create order.');
+    }
   };
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_420px]">
       <section className="panel space-y-4">
         <h1 className="text-3xl font-bold">Checkout</h1>
+        {message && <p className="rounded-md bg-stone-100 px-3 py-2 text-sm text-stone-700">{message}</p>}
         {Object.keys(shippingAddress).map((field) => (
           <input
             className="input"
@@ -48,17 +77,22 @@ export default function Checkout() {
             value={shippingAddress[field]}
           />
         ))}
-        <button className="btn" disabled={!items.length} onClick={placeOrder} type="button">Create order</button>
+        <button className="btn" disabled={!items.length || !hasShippingAddress || Boolean(orderId)} onClick={handleCreateOrder} type="button">
+          {orderId ? 'Order created' : 'Create order'}
+        </button>
       </section>
       <aside className="panel h-fit space-y-4">
         <h2 className="text-xl font-bold">Pay with PayPal</h2>
         <p className="flex justify-between font-semibold"><span>Total</span><span>${totals.totalPrice.toFixed(2)}</span></p>
-        <PayPalScriptProvider options={paypalOptions}>
+        {!hasShippingAddress && <p className="text-sm text-stone-600">Enter shipping details to enable PayPal checkout.</p>}
+        <PayPalScriptProvider key={paypalClientId} options={paypalOptions}>
           <PayPalButtons
             createOrder={async (_data, actions) => {
-              if (!orderId) await placeOrder();
+              await placeOrder();
               return actions.order.create({ purchase_units: [{ amount: { value: totals.totalPrice.toFixed(2) } }] });
             }}
+            disabled={!items.length || !hasShippingAddress}
+            onError={(error) => setMessage(error.message || 'PayPal payment failed.')}
             onApprove={handleApprove}
           />
         </PayPalScriptProvider>

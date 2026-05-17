@@ -5,7 +5,7 @@ import { upload } from '../middleware/uploadMiddleware.js';
 const router = express.Router();
 
 router.post('/', protect, admin, upload.single('image'), (req, res) => {
-  res.status(201).json({ image: `/${req.file.path.replaceAll('\\', '/')}` });
+  res.status(201).json({ image: `/uploads/${req.file.filename}` });
 });
 
 export default router;
