@@ -12,12 +12,27 @@ export default function AdminProducts() {
   const { data: categories = [] } = useGetCategoriesQuery();
   const [createProduct] = useCreateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
-  const [form, setForm] = useState({ name: '', brand: '', category: '', description: '', image: '/uploads/product.jpg', price: '', countInStock: '' });
+  const [form, setForm] = useState({
+    name: '',
+    brand: '',
+    category: '',
+    description: '',
+    image: '/uploads/product.jpg',
+    gallery: '',
+    videoUrl: '',
+    price: '',
+    countInStock: ''
+  });
 
   const submit = async (event) => {
     event.preventDefault();
-    await createProduct({ ...form, price: Number(form.price), countInStock: Number(form.countInStock) }).unwrap();
-    setForm({ name: '', brand: '', category: '', description: '', image: '/uploads/product.jpg', price: '', countInStock: '' });
+    await createProduct({
+      ...form,
+      gallery: form.gallery.split(',').map((item) => item.trim()).filter(Boolean),
+      price: Number(form.price),
+      countInStock: Number(form.countInStock)
+    }).unwrap();
+    setForm({ name: '', brand: '', category: '', description: '', image: '/uploads/product.jpg', gallery: '', videoUrl: '', price: '', countInStock: '' });
   };
 
   return (
@@ -31,6 +46,8 @@ export default function AdminProducts() {
           {categories.map((category) => <option key={category._id} value={category._id}>{category.name}</option>)}
         </select>
         <input className="input" placeholder="Image URL" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
+        <input className="input" placeholder="Gallery URLs, comma separated" value={form.gallery} onChange={(e) => setForm({ ...form, gallery: e.target.value })} />
+        <input className="input" placeholder="Video URL" value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })} />
         <input className="input" placeholder="Price" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
         <input className="input" placeholder="Stock" type="number" value={form.countInStock} onChange={(e) => setForm({ ...form, countInStock: e.target.value })} />
         <textarea className="input md:col-span-3" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />

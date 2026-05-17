@@ -1,4 +1,4 @@
-import { ArrowRight, BadgeCheck, CreditCard, Search, ShieldCheck, SlidersHorizontal, Truck } from 'lucide-react';
+import { ArrowRight, BadgeCheck, CreditCard, PlayCircle, Search, ShieldCheck, SlidersHorizontal, Truck } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import { demoCategories, demoProducts } from '../data/demoProducts';
@@ -74,6 +74,32 @@ export default function Home() {
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {featured.map((product) => <ProductCard key={product._id} product={product} />)}
+        </div>
+      </section>
+
+      <section className="grid gap-5 rounded-lg bg-ink p-5 text-white md:grid-cols-[1.1fr_0.9fr] md:p-8">
+        <div className="flex flex-col justify-center">
+          <p className="text-sm font-semibold uppercase tracking-wide text-brass">Dynamic media</p>
+          <h2 className="mt-2 text-3xl font-bold">Images, videos, and product stories</h2>
+          <p className="mt-3 max-w-xl text-stone-200">
+            Product pages now support multiple images and video previews, so each item can feel like a real catalogue listing instead of a single static card.
+          </p>
+          <div className="mt-5 grid gap-3 text-sm sm:grid-cols-3">
+            <span className="rounded-md bg-white/10 p-3">Gallery thumbnails</span>
+            <span className="rounded-md bg-white/10 p-3">Video playback</span>
+            <span className="rounded-md bg-white/10 p-3">Dynamic seed data</span>
+          </div>
+        </div>
+        <div className="overflow-hidden rounded-lg bg-black">
+          <video
+            autoPlay
+            className="aspect-video h-full w-full object-cover"
+            loop
+            muted
+            playsInline
+            poster="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80"
+            src="https://videos.pexels.com/video-files/7534244/7534244-hd_1920_1080_25fps.mp4"
+          />
         </div>
       </section>
 

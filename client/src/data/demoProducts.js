@@ -154,3 +154,26 @@ export const demoProducts = [
     numReviews: 10
   }
 ];
+
+const galleryImages = [
+  'https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'
+];
+
+const productVideos = [
+  'https://videos.pexels.com/video-files/7534244/7534244-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/7578552/7578552-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/5998165/5998165-hd_1920_1080_25fps.mp4'
+];
+
+demoProducts.forEach((product, index) => {
+  product.gallery = [
+    product.image,
+    galleryImages[index % galleryImages.length],
+    galleryImages[(index + 2) % galleryImages.length]
+  ];
+  product.videoUrl = index % 2 === 0 ? productVideos[index % productVideos.length] : '';
+});
