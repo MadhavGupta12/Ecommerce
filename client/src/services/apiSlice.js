@@ -2,7 +2,19 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api', credentials: 'include' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/api',
+    credentials: 'include',
+    prepareHeaders: (headers, { getState }) => {
+      const token = getState().auth.userInfo?.token;
+
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+
+      return headers;
+    }
+  }),
   tagTypes: ['Product', 'Category', 'Order', 'User', 'Stats'],
   endpoints: (builder) => ({
     login: builder.mutation({
