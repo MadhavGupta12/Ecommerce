@@ -11,9 +11,9 @@ await connectDB();
 await Promise.all([Order.deleteMany(), Product.deleteMany(), Category.deleteMany(), User.deleteMany()]);
 
 const admin = await User.create({
-  name: 'Admin User',
-  email: 'admin@luxehaven.dev',
-  password: 'password123',
+  name: process.env.ADMIN_NAME || 'Admin User',
+  email: process.env.ADMIN_EMAIL || 'admin@luxehaven.dev',
+  password: process.env.ADMIN_PASSWORD || 'password123',
   role: 'admin'
 });
 

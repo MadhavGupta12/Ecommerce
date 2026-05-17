@@ -61,7 +61,7 @@ The frontend runs on `http://localhost:5173` and the API runs on `http://localho
 ## Demo Accounts
 
 ```text
-Admin:    admin@luxehaven.dev / password123
+Admin:    Configure ADMIN_EMAIL and ADMIN_PASSWORD in server/.env
 Customer: customer@luxehaven.dev / password123
 ```
 
