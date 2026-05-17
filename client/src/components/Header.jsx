@@ -18,9 +18,12 @@ export default function Header() {
   };
 
   return (
-    <header className="border-b border-stone-200 bg-white">
+    <header className="sticky top-0 z-20 border-b border-stone-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link to="/" className="text-xl font-bold tracking-wide">LuxeHaven</Link>
+        <Link to="/" className="flex items-center gap-3 text-xl font-bold tracking-wide">
+          <span className="grid h-9 w-9 place-items-center rounded-md bg-ink text-sm text-white">LH</span>
+          LuxeHaven
+        </Link>
         <nav className="flex items-center gap-2 sm:gap-4">
           {userInfo?.role === 'admin' && (
             <NavLink className="btn-secondary" to="/admin">

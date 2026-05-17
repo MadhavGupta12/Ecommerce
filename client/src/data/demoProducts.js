@@ -1,41 +1,16 @@
-import dotenv from 'dotenv';
-import { connectDB } from './config/db.js';
-import Category from './models/Category.js';
-import Order from './models/Order.js';
-import Product from './models/Product.js';
-import User from './models/User.js';
+export const demoCategories = [
+  { _id: 'cat-furniture', name: 'Furniture', description: 'Sofas, chairs, tables, and storage pieces' },
+  { _id: 'cat-lighting', name: 'Lighting', description: 'Warm lamps and sculptural fixtures' },
+  { _id: 'cat-decor', name: 'Decor', description: 'Textiles, trays, mirrors, and accents' },
+  { _id: 'cat-bedroom', name: 'Bedroom', description: 'Soft bedroom essentials and nightstands' }
+];
 
-dotenv.config();
-await connectDB();
-
-await Promise.all([Order.deleteMany(), Product.deleteMany(), Category.deleteMany(), User.deleteMany()]);
-
-const admin = await User.create({
-  name: 'Admin User',
-  email: 'admin@luxehaven.dev',
-  password: 'password123',
-  role: 'admin'
-});
-
-await User.create({
-  name: 'Demo Customer',
-  email: 'customer@luxehaven.dev',
-  password: 'password123',
-  role: 'customer'
-});
-
-const categories = await Category.insertMany([
-  { name: 'Furniture', description: 'Sofas, chairs, tables, and storage pieces' },
-  { name: 'Lighting', description: 'Warm lamps and sculptural fixtures' },
-  { name: 'Decor', description: 'Textiles, trays, mirrors, and accents' },
-  { name: 'Bedroom', description: 'Soft bedroom essentials and nightstands' }
-]);
-
-await Product.insertMany([
+export const demoProducts = [
   {
+    _id: 'demo-aurora-chair',
     name: 'Aurora Lounge Chair',
     brand: 'LuxeHaven Studio',
-    category: categories[0]._id,
+    category: demoCategories[0],
     description: 'A sculptural lounge chair with a curved hardwood frame, deep seat, and soft boucle upholstery made for reading corners.',
     image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=80',
     price: 429,
@@ -45,9 +20,10 @@ await Product.insertMany([
     featured: true
   },
   {
+    _id: 'demo-velvet-sofa',
     name: 'Marlow Velvet Sofa',
     brand: 'Casa Vale',
-    category: categories[0]._id,
+    category: demoCategories[0],
     description: 'A low-profile three-seat sofa with performance velvet, generous cushions, and brass-finished tapered legs.',
     image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
     price: 1199,
@@ -57,9 +33,10 @@ await Product.insertMany([
     featured: true
   },
   {
+    _id: 'demo-oak-table',
     name: 'Haven Oak Coffee Table',
     brand: 'Northline',
-    category: categories[0]._id,
+    category: demoCategories[0],
     description: 'A solid oak coffee table with softened edges, a lower display shelf, and a natural matte finish.',
     image: 'https://images.unsplash.com/photo-1532372320978-9d44f8ebfca7?auto=format&fit=crop&w=1200&q=80',
     price: 349,
@@ -68,9 +45,10 @@ await Product.insertMany([
     numReviews: 16
   },
   {
+    _id: 'demo-solstice-lamp',
     name: 'Solstice Floor Lamp',
     brand: 'Northline',
-    category: categories[1]._id,
+    category: demoCategories[1],
     description: 'A brass floor lamp with a diffused glass globe and dimmable ambient light for evening rooms.',
     image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1200&q=80',
     price: 189,
@@ -79,9 +57,10 @@ await Product.insertMany([
     numReviews: 11
   },
   {
+    _id: 'demo-ceramic-lamp',
     name: 'Aster Ceramic Table Lamp',
     brand: 'LuxeHaven Studio',
-    category: categories[1]._id,
+    category: demoCategories[1],
     description: 'A hand-glazed ceramic lamp with a linen drum shade and warm bedside glow.',
     image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=1200&q=80',
     price: 144,
@@ -90,9 +69,10 @@ await Product.insertMany([
     numReviews: 14
   },
   {
+    _id: 'demo-marble-trays',
     name: 'Marble Nesting Trays',
     brand: 'Casa Vale',
-    category: categories[2]._id,
+    category: demoCategories[2],
     description: 'A set of two honed marble trays for consoles, coffee tables, perfume bottles, and dresser styling.',
     image: 'https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1200&q=80',
     price: 74,
@@ -101,9 +81,10 @@ await Product.insertMany([
     numReviews: 9
   },
   {
+    _id: 'demo-wool-throw',
     name: 'Alpine Wool Throw',
     brand: 'Hearth & Loom',
-    category: categories[2]._id,
+    category: demoCategories[2],
     description: 'A brushed wool-blend throw with quiet texture, finished fringe, and year-round comfort.',
     image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1200&q=80',
     price: 96,
@@ -112,9 +93,10 @@ await Product.insertMany([
     numReviews: 22
   },
   {
+    _id: 'demo-round-mirror',
     name: 'Orsay Round Mirror',
     brand: 'Maison Row',
-    category: categories[2]._id,
+    category: demoCategories[2],
     description: 'A slim metal-framed round mirror that brightens entryways, vanities, and compact living spaces.',
     image: 'https://images.unsplash.com/photo-1616486701797-0f33f61038ec?auto=format&fit=crop&w=1200&q=80',
     price: 212,
@@ -123,9 +105,10 @@ await Product.insertMany([
     numReviews: 19
   },
   {
+    _id: 'demo-linen-duvet',
     name: 'Washed Linen Duvet Set',
     brand: 'Hearth & Loom',
-    category: categories[3]._id,
+    category: demoCategories[3],
     description: 'A breathable linen duvet and pillowcase set with a relaxed, softly rumpled finish.',
     image: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80',
     price: 238,
@@ -135,9 +118,10 @@ await Product.insertMany([
     featured: true
   },
   {
+    _id: 'demo-walnut-nightstand',
     name: 'Walnut Cove Nightstand',
     brand: 'Northline',
-    category: categories[3]._id,
+    category: demoCategories[3],
     description: 'A compact walnut nightstand with a soft-close drawer and open shelf for everyday bedside storage.',
     image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
     price: 279,
@@ -146,9 +130,10 @@ await Product.insertMany([
     numReviews: 12
   },
   {
+    _id: 'demo-dining-chair',
     name: 'Fable Dining Chair',
     brand: 'Casa Vale',
-    category: categories[0]._id,
+    category: demoCategories[0],
     description: 'A curved-back dining chair with woven seat detailing and an easy silhouette for long dinners.',
     image: 'https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=1200&q=80',
     price: 168,
@@ -157,9 +142,10 @@ await Product.insertMany([
     numReviews: 8
   },
   {
+    _id: 'demo-wall-sconce',
     name: 'Halo Wall Sconce',
     brand: 'Maison Row',
-    category: categories[1]._id,
+    category: demoCategories[1],
     description: 'A compact wall sconce with a milk-glass shade and warm brass armature for hallways and bedsides.',
     image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80',
     price: 126,
@@ -167,7 +153,4 @@ await Product.insertMany([
     rating: 4.4,
     numReviews: 10
   }
-]);
-
-console.log(`Seeded LuxeHaven with admin ${admin.email}`);
-process.exit(0);
+];
