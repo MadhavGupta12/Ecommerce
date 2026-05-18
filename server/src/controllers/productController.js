@@ -1,11 +1,26 @@
 import asyncHandler from 'express-async-handler';
 import Product from '../models/Product.js';
+import Category from '../models/Category.js';
 
 export const getProducts = asyncHandler(async (req, res) => {
   const pageSize = Number(req.query.limit) || 8;
   const page = Number(req.query.page) || 1;
   const keyword = req.query.keyword ? { $text: { $search: req.query.keyword } } : {};
-  const category = req.query.category ? { category: req.query.category } : {};
+  
+  // Handle category filter - support both ObjectId and slug
+  let category = {};
+  if (req.query.category) {
+    const categoryDoc = await Category.findOne({ 
+      $or: [
+        { _id: req.query.category },
+        { slug: req.query.category }
+      ]
+    });
+    if (categoryDoc) {
+      category = { category: categoryDoc._id };
+    }
+  }
+  
   const minPrice = req.query.minPrice ? Number(req.query.minPrice) : 0;
   const maxPrice = req.query.maxPrice ? Number(req.query.maxPrice) : Number.MAX_SAFE_INTEGER;
   const rating = req.query.rating ? { rating: { $gte: Number(req.query.rating) } } : {};
@@ -34,7 +49,16 @@ export const getProducts = asyncHandler(async (req, res) => {
 });
 
 export const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id).populate('category', 'name');
+  let product;
+  
+  // Try to find by slug first
+  product = await Product.findOne({ slug: req.params.id }).populate('category', 'name');
+  
+  // If not found, try to find by ObjectId (if it's a valid MongoDB ID)
+  if (!product && req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    product = await Product.findById(req.params.id).populate('category', 'name');
+  }
+  
   if (!product) {
     res.status(404);
     throw new Error('Product not found');

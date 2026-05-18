@@ -25,10 +25,26 @@ await User.create({
 });
 
 const categories = await Category.insertMany([
-  { name: 'Furniture', description: 'Sofas, chairs, tables, and storage pieces' },
-  { name: 'Lighting', description: 'Warm lamps and sculptural fixtures' },
-  { name: 'Decor', description: 'Textiles, trays, mirrors, and accents' },
-  { name: 'Bedroom', description: 'Soft bedroom essentials and nightstands' }
+  { 
+    name: 'Furniture', 
+    slug: 'furniture',
+    description: 'Sofas, chairs, tables, and storage pieces' 
+  },
+  { 
+    name: 'Lighting', 
+    slug: 'lighting',
+    description: 'Warm lamps and sculptural fixtures' 
+  },
+  { 
+    name: 'Decor', 
+    slug: 'decor',
+    description: 'Textiles, trays, mirrors, and accents' 
+  },
+  { 
+    name: 'Bedroom', 
+    slug: 'bedroom',
+    description: 'Soft bedroom essentials and nightstands' 
+  }
 ]);
 
 const mediaImages = [
@@ -57,6 +73,7 @@ const mediaVideos = [
 
 const withMedia = (product, index) => ({
   ...product,
+  slug: product.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, ''),
   gallery: [
     product.image,
     mediaImages[index % mediaImages.length],
