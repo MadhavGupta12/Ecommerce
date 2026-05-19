@@ -64,8 +64,22 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // === Advanced Security & Performance Middlewares ===
-// Set security HTTP headers
-app.use(helmet());
+// Set security HTTP headers with custom Content Security Policy for external media & PayPal integration
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        "img-src": ["'self'", "data:", "https://images.unsplash.com", "https://images.pexels.com", "https://*.paypalobjects.com", "https://raw.githubusercontent.com"],
+        "media-src": ["'self'", "data:", "https://video.pexels.com", "https://images.pexels.com", "https://*.pexels.com"],
+        "script-src": ["'self'", "'unsafe-inline'", "https://www.paypal.com", "https://*.paypal.com", "https://*.paypalobjects.com"],
+        "frame-src": ["'self'", "https://www.paypal.com", "https://*.paypal.com"],
+        "connect-src": ["'self'", "https://www.paypal.com", "https://*.paypal.com", "ws:", "wss:", "http://localhost:*", "https://*.onrender.com"]
+      }
+    },
+    crossOriginEmbedderPolicy: false
+  })
+);
 
 // Rate limiting
 const limiter = rateLimit({
