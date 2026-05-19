@@ -2,13 +2,6 @@ import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { clearCart, selectCartTotals } from '../features/cartSlice';
-import { useCreateOrderMutation, useGetPaypalConfigQuery, usePayOrderMutation } from '../services/apiSlice';
-
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { useMemo, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, ShoppingCart, CreditCard, ChevronRight, Check } from 'lucide-react';
 import { clearCart, selectCartTotals } from '../features/cartSlice';
