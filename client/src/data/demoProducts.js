@@ -152,6 +152,56 @@ export const demoProducts = [
     countInStock: 20,
     rating: 4.4,
     numReviews: 10
+  },
+  {
+    _id: 'demo-boucle-ottoman',
+    name: 'Oasis Boucle Ottoman',
+    brand: 'LuxeHaven Studio',
+    category: demoCategories[0],
+    description: 'A plush, oversized ottoman wrapped in cream boucle fabric. Perfect as a footrest or extra seating.',
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+    price: 299,
+    countInStock: 8,
+    rating: 4.9,
+    numReviews: 42,
+    featured: true
+  },
+  {
+    _id: 'demo-brass-pendant',
+    name: 'Eclipse Brass Pendant',
+    brand: 'Northline',
+    category: demoCategories[1],
+    description: 'A minimalist dome pendant light spun from solid brass. Casts a warm, concentrated glow over dining tables.',
+    image: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=1200&q=80',
+    price: 450,
+    countInStock: 14,
+    rating: 4.6,
+    numReviews: 24
+  },
+  {
+    _id: 'demo-clay-vase',
+    name: 'Terracotta Sculptural Vase',
+    brand: 'Maison Row',
+    category: demoCategories[2],
+    description: 'A handcrafted terracotta vase with an organic silhouette. Beautiful with dried florals or standing alone.',
+    image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=1200&q=80',
+    price: 85,
+    countInStock: 40,
+    rating: 4.3,
+    numReviews: 15
+  },
+  {
+    _id: 'demo-bed-frame',
+    name: 'Norden Platform Bed',
+    brand: 'Casa Vale',
+    category: demoCategories[3],
+    description: 'A low-profile solid ash wood bed frame featuring an angled headboard for comfortable reading in bed.',
+    image: 'https://images.unsplash.com/photo-1505693314120-0d443867891c?auto=format&fit=crop&w=1200&q=80',
+    price: 1450,
+    countInStock: 4,
+    rating: 4.8,
+    numReviews: 56,
+    featured: true
   }
 ];
 
@@ -167,7 +217,11 @@ const galleryImages = [
   'https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80',
   'https://images.unsplash.com/photo-1600607688066-890987f18a86?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=80'
+  'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1583847268964-b28ce8f30d14?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80'
 ];
 
 const productVideos = [
@@ -176,7 +230,9 @@ const productVideos = [
   'https://videos.pexels.com/video-files/5998165/5998165-hd_1920_1080_25fps.mp4',
   'https://videos.pexels.com/video-files/7586177/7586177-hd_1920_1080_25fps.mp4',
   'https://videos.pexels.com/video-files/7033773/7033773-hd_1920_1080_25fps.mp4',
-  'https://videos.pexels.com/video-files/7578543/7578543-hd_1920_1080_25fps.mp4'
+  'https://videos.pexels.com/video-files/7578543/7578543-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/6582736/6582736-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/4465839/4465839-hd_1920_1080_30fps.mp4'
 ];
 
 demoProducts.forEach((product, index) => {
