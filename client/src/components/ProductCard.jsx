@@ -1,11 +1,44 @@
-import { Images, PlayCircle, ShoppingBag, Star, Eye } from 'lucide-react';
+import { Images, PlayCircle, ShoppingBag, Star, Eye, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
+import { 
+  useGetWishlistQuery, 
+  useAddToWishlistMutation, 
+  useRemoveFromWishlistMutation 
+} from '../services/apiSlice';
 import QuickViewModal from './QuickViewModal';
 
 export default function ProductCard({ product, index = 0 }) {
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+  const { userInfo } = useSelector((state) => state.auth);
+  const { data: wishlist = [] } = useGetWishlistQuery(undefined, { skip: !userInfo });
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+
+  const isWishlisted = wishlist.some((item) => item._id === product._id);
+
+  const handleWishlistToggle = async (e) => {
+    e.stopPropagation();
+    if (!userInfo) {
+      toast.error('Please log in to add items to your wishlist');
+      return;
+    }
+
+    try {
+      if (isWishlisted) {
+        await removeFromWishlist(product._id).unwrap();
+        toast.success('Removed from wishlist');
+      } else {
+        await addToWishlist(product._id).unwrap();
+        toast.success('Added to wishlist', { icon: '❤️' });
+      }
+    } catch (err) {
+      toast.error(err.data?.message || 'Something went wrong');
+    }
+  };
 
   return (
     <>
@@ -32,6 +65,15 @@ export default function ProductCard({ product, index = 0 }) {
               <Eye size={18} /> Quick View
             </button>
           </div>
+
+          {/* Wishlist Heart Toggle */}
+          <button
+            onClick={handleWishlistToggle}
+            className="absolute right-3 top-3 p-2 rounded-full bg-white/90 shadow-soft hover:bg-white text-stone-600 hover:text-red-500 hover:scale-110 transition-all z-10 dark:bg-stone-900/90 dark:text-stone-300 dark:hover:bg-stone-800"
+            title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+          >
+            <Heart size={18} className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
+          </button>
 
           {product.featured && (
             <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink shadow-sm backdrop-blur-sm z-10">

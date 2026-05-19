@@ -14,6 +14,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import ProductDetails from './pages/ProductDetails';
 import Register from './pages/Register';
+import Wishlist from './pages/Wishlist';
 import ProtectedRoute from './components/ProtectedRoute';
 import './styles.css';
 
@@ -27,6 +28,14 @@ const router = createBrowserRouter([
       { path: 'cart', element: <Cart /> },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
+      {
+        path: 'wishlist',
+        element: (
+          <ProtectedRoute>
+            <Wishlist />
+          </ProtectedRoute>
+        )
+      },
       {
         path: 'checkout',
         element: (

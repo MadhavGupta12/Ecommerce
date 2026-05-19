@@ -15,7 +15,7 @@ export const apiSlice = createApi({
       return headers;
     }
   }),
-  tagTypes: ['Product', 'Category', 'Order', 'User', 'Stats'],
+  tagTypes: ['Product', 'Category', 'Order', 'User', 'Stats', 'Wishlist'],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (body) => ({ url: '/auth/login', method: 'POST', body })
@@ -25,6 +25,18 @@ export const apiSlice = createApi({
     }),
     logout: builder.mutation({
       query: () => ({ url: '/auth/logout', method: 'POST' })
+    }),
+    getWishlist: builder.query({
+      query: () => '/users/wishlist',
+      providesTags: ['Wishlist']
+    }),
+    addToWishlist: builder.mutation({
+      query: (productId) => ({ url: '/users/wishlist', method: 'POST', body: { productId } }),
+      invalidatesTags: ['Wishlist']
+    }),
+    removeFromWishlist: builder.mutation({
+      query: (productId) => ({ url: `/users/wishlist/${productId}`, method: 'DELETE' }),
+      invalidatesTags: ['Wishlist']
     }),
     getProducts: builder.query({
       query: (params = {}) => ({ url: '/products', params }),
@@ -116,5 +128,8 @@ export const {
   useGetUsersQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useCreateProductReviewMutation
+  useCreateProductReviewMutation,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation
 } = apiSlice;

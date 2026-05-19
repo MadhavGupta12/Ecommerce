@@ -1,4 +1,4 @@
-import { LogOut, Package, ShoppingBag, ShieldCheck, User, Moon, Sun } from 'lucide-react';
+import { LogOut, Package, ShoppingBag, ShieldCheck, User, Moon, Sun, Heart } from 'lucide-react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCredentials } from '../features/authSlice';
@@ -47,6 +47,11 @@ export default function Header() {
             <NavLink className="btn-secondary dark:text-stone-300 dark:border-stone-700 dark:hover:bg-stone-800" to="/admin">
               <ShieldCheck size={18} />
               <span className="hidden sm:inline">Admin</span>
+            </NavLink>
+          )}
+          {userInfo && (
+            <NavLink className="btn-secondary dark:text-stone-300 dark:border-stone-700 dark:hover:bg-stone-800" to="/wishlist" title="Wishlist">
+              <Heart size={18} />
             </NavLink>
           )}
           <NavLink className="btn-secondary dark:text-stone-300 dark:border-stone-700 dark:hover:bg-stone-800" to="/cart">
