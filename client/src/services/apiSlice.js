@@ -46,6 +46,10 @@ export const apiSlice = createApi({
       query: (id) => ({ url: `/products/${id}`, method: 'DELETE' }),
       invalidatesTags: ['Product']
     }),
+    createProductReview: builder.mutation({
+      query: ({ id, ...body }) => ({ url: `/products/${id}/reviews`, method: 'POST', body }),
+      invalidatesTags: (_result, _error, arg) => [{ type: 'Product', id: arg.id }]
+    }),
     getCategories: builder.query({
       query: () => '/categories',
       providesTags: ['Category']
@@ -111,5 +115,6 @@ export const {
   useGetStatsQuery,
   useGetUsersQuery,
   useUpdateUserMutation,
-  useDeleteUserMutation
+  useDeleteUserMutation,
+  useCreateProductReviewMutation
 } = apiSlice;

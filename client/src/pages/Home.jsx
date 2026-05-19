@@ -3,7 +3,13 @@ import { useMemo, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import { demoCategories, demoProducts } from '../data/demoProducts';
 import { useGetCategoriesQuery, useGetProductsQuery } from '../services/apiSlice';
+import { motion } from 'framer-motion';
+import ProductSkeleton from '../components/ProductSkeleton';
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
 export default function Home() {
   const [filters, setFilters] = useState({ keyword: '', category: '', sort: 'newest', rating: '', minPrice: '', maxPrice: '' });
   const params = useMemo(() => Object.fromEntries(Object.entries(filters).filter(([, value]) => value !== '')), [filters]);
@@ -50,22 +56,27 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-4">
+      <motion.section 
+        initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp}
+        className="grid gap-4 md:grid-cols-4"
+      >
         {categories.map((category, index) => (
-          <button
-            className="rounded-lg border border-stone-200 bg-white p-5 text-left shadow-soft transition hover:border-brass"
+          <motion.button
+            whileHover={{ scale: 1.02, y: -5 }}
+            whileTap={{ scale: 0.98 }}
+            className="rounded-xl border border-stone-200 bg-white p-5 text-left shadow-soft transition-colors hover:border-brass hover:shadow-lg"
             key={category._id}
             onClick={() => setFilters((current) => ({ ...current, category: category._id }))}
             type="button"
           >
-            <p className="text-sm font-semibold text-brass">0{index + 1}</p>
-            <h2 className="mt-2 text-xl font-bold">{category.name}</h2>
-            <p className="mt-1 text-sm text-stone-600">{category.description}</p>
-          </button>
+            <p className="text-sm font-bold tracking-widest text-brass">0{index + 1}</p>
+            <h2 className="mt-2 text-xl font-extrabold">{category.name}</h2>
+            <p className="mt-1 text-sm text-stone-600 line-clamp-2">{category.description}</p>
+          </motion.button>
         ))}
-      </section>
+      </motion.section>
 
-      <section className="space-y-4" id="featured">
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="space-y-4" id="featured">
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-moss">Editor picks</p>
@@ -73,10 +84,16 @@ export default function Home() {
           </div>
           <BadgeCheck className="text-brass" size={28} />
         </div>
+        
+        {/* Bento Grid layout for Featured Pieces */}
         <div className="grid gap-5 md:grid-cols-3">
-          {featured.map((product) => <ProductCard key={product._id} product={product} />)}
+          {featured.map((product, idx) => (
+            <div key={product._id} className={idx === 0 ? "md:col-span-2 md:row-span-2" : ""}>
+              <ProductCard product={product} index={idx} />
+            </div>
+          ))}
         </div>
-      </section>
+      </motion.section>
 
       <section className="grid gap-5 rounded-lg bg-ink p-5 text-white md:grid-cols-[1.1fr_0.9fr] md:p-8">
         <div className="flex flex-col justify-center">
@@ -147,7 +164,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="space-y-5" id="catalogue">
+      <motion.section initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeInUp} className="space-y-5" id="catalogue">
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-moss">Catalogue</p>
@@ -158,31 +175,84 @@ export default function Home() {
           </span>
         </div>
 
-        <section className="panel grid gap-3 md:grid-cols-[1.2fr_0.9fr_0.8fr_0.7fr_0.7fr]">
-          <label className="relative">
-            <Search className="absolute left-3 top-2.5 text-stone-400" size={18} />
-            <input className="input pl-10" name="keyword" onChange={update} placeholder="Search products" value={filters.keyword} />
-          </label>
-          <select className="input" name="category" onChange={update} value={filters.category}>
-            <option value="">All categories</option>
-            {categories.map((category) => <option key={category._id} value={category._id}>{category.name}</option>)}
-          </select>
-          <select className="input" name="sort" onChange={update} value={filters.sort}>
-            <option value="newest">Newest</option>
-            <option value="priceAsc">Price low to high</option>
-            <option value="priceDesc">Price high to low</option>
-            <option value="rating">Top rated</option>
-          </select>
-          <input className="input" min="0" name="minPrice" onChange={update} placeholder="Min $" type="number" value={filters.minPrice} />
-          <input className="input" min="0" name="maxPrice" onChange={update} placeholder="Max $" type="number" value={filters.maxPrice} />
-        </section>
+        <div className="grid lg:grid-cols-[280px_1fr] gap-8 items-start">
+          {/* Dynamic Sidebar Filters */}
+          <aside className="panel space-y-8 sticky top-24 dark:bg-stone-900/50">
+            <div>
+              <h3 className="font-bold text-lg mb-3 flex items-center gap-2"><Search size={18}/> Search</h3>
+              <div className="relative">
+                <Search className="absolute left-3 top-2.5 text-stone-400" size={18} />
+                <input className="input pl-10" name="keyword" onChange={update} placeholder="Search products, brands..." value={filters.keyword} />
+              </div>
+            </div>
 
-        {isLoading && <p>Loading catalogue...</p>}
-        {isError && <p className="rounded-md border border-brass/30 bg-white px-4 py-3 text-sm text-stone-700">Showing demo catalogue until MongoDB is connected and seeded.</p>}
-        <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => <ProductCard key={product._id} product={product} />)}
-        </section>
-      </section>
+            <div>
+              <h3 className="font-bold text-lg mb-3">Categories</h3>
+              <div className="space-y-2">
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <input type="radio" name="category" value="" onChange={update} checked={filters.category === ''} className="w-4 h-4 text-brass focus:ring-brass bg-stone-100 border-stone-300 dark:bg-stone-800 dark:border-stone-700" />
+                  <span className="text-stone-600 group-hover:text-brass dark:text-stone-400 font-medium">All categories</span>
+                </label>
+                {categories.map((category) => (
+                  <label key={category._id} className="flex items-center gap-3 cursor-pointer group">
+                    <input type="radio" name="category" value={category._id} onChange={update} checked={filters.category === category._id} className="w-4 h-4 text-brass focus:ring-brass bg-stone-100 border-stone-300 dark:bg-stone-800 dark:border-stone-700" />
+                    <span className="text-stone-600 group-hover:text-brass dark:text-stone-400 font-medium">{category.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-3">Price Range</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <input className="input" min="0" name="minPrice" onChange={update} placeholder="Min $" type="number" value={filters.minPrice} />
+                <input className="input" min="0" name="maxPrice" onChange={update} placeholder="Max $" type="number" value={filters.maxPrice} />
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-3">Sort & Order</h3>
+              <select className="input" name="sort" onChange={update} value={filters.sort}>
+                <option value="newest">Newest Arrivals</option>
+                <option value="priceAsc">Price: Low to High</option>
+                <option value="priceDesc">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
+              </select>
+            </div>
+          </aside>
+
+          {/* Product Grid Area */}
+          <div className="space-y-6">
+            {isLoading && (
+              <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <ProductSkeleton count={6} />
+              </section>
+            )}
+            {isError && <p className="rounded-md border border-brass/30 bg-white px-4 py-3 text-sm text-stone-700">Showing demo catalogue until MongoDB is connected and seeded.</p>}
+            {!isLoading && (
+              <>
+                {products.length === 0 ? (
+                  <div className="panel flex flex-col items-center justify-center py-20 text-center">
+                    <Search className="text-stone-300 mb-4" size={48} />
+                    <h3 className="text-xl font-bold">No products found</h3>
+                    <p className="text-stone-500 mt-2">Try adjusting your filters or search query.</p>
+                    <button 
+                      className="btn-secondary mt-4" 
+                      onClick={() => setFilters({ keyword: '', category: '', sort: 'newest', rating: '', minPrice: '', maxPrice: '' })}
+                    >
+                      Clear all filters
+                    </button>
+                  </div>
+                ) : (
+                  <section className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {products.map((product, idx) => <ProductCard key={product._id} product={product} index={idx} />)}
+                  </section>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </motion.section>
     </div>
   );
 }

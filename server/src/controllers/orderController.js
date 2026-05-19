@@ -52,7 +52,15 @@ export const updateOrderToPaid = asyncHandler(async (req, res) => {
     emailAddress: req.body.payer?.email_address
   };
 
-  res.json(await order.save());
+  const updatedOrder = await order.save();
+  
+  // Emit real-time update
+  const io = req.app.get('io');
+  if (io) {
+    io.to(`order_${updatedOrder._id}`).emit('order_paid', updatedOrder);
+  }
+
+  res.json(updatedOrder);
 });
 
 export const getOrders = asyncHandler(async (_req, res) => {
@@ -68,5 +76,13 @@ export const updateOrderToDelivered = asyncHandler(async (req, res) => {
 
   order.isDelivered = true;
   order.deliveredAt = Date.now();
-  res.json(await order.save());
+  const updatedOrder = await order.save();
+
+  // Emit real-time update
+  const io = req.app.get('io');
+  if (io) {
+    io.to(`order_${updatedOrder._id}`).emit('order_delivered', updatedOrder);
+  }
+
+  res.json(updatedOrder);
 });
